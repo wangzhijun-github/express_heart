@@ -1,0 +1,228 @@
+<!doctype html><!--声明当前页面  HTML-->
+<html lang="en"><!--超文本标记语言-->
+	<head>
+		<!--编码集  UTF-8 国际编码 GBK GB2312 中文编码-->
+		<meta charset="UTF-8">
+		<!--网页三要素-->
+		<meta name="Keywords" content="关键词">
+		<meta name="Description" content="描述">
+		<title>Document</title><!--网页标题-->
+		<!--css 层叠样式表  衣服，化妆品 修饰-->
+		<style>
+		*{
+			margin:0;/*外边距*/
+			padding:0;/*内边距*/
+		}
+		#box,#box1,#box2{
+			width:150px;
+			height:150px;
+			margin:150px auto;/*上下  左右*/
+			transform-style:preserve-3d;/*置于3d空间*/
+			transform-origin:center center center;/*对称轴*/
+			animation:spain  15s infinite linear;
+			position:absolute;
+			top:100px;
+			left: 200px;
+		}
+
+		@-webkit-keyframes spain{
+				form{transform:rotateX(0deg) rotateY(0deg) }
+				to{transform:rotateX(360deg) rotateY(360deg)}
+		}
+		
+		</style>
+			<style type="text/css">
+			html,body{
+				width: 100%;
+				height: 100%;
+				margin: 0;
+				padding: 0;
+				overflow: hidden;
+			}
+			.canvas{
+				background: #222;
+			}
+		</style>
+	</head>
+	<body>
+			<canvas id="canvas" class="canvas"></canvas>
+		<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+		<script type="text/javascript">
+			
+			 window.requestAnimFrame = (function(){
+		      return  window.requestAnimationFrame       || 
+		              window.webkitRequestAnimationFrame || 
+		              window.mozRequestAnimationFrame    || 
+		              window.oRequestAnimationFrame      || 
+		              window.msRequestAnimationFrame     || 
+		              function(/* function */ callback, /* DOMElement */ element){
+		                window.setTimeout(callback, 1000 / 60);
+		              };
+		    })();
+		    
+			$(document).ready(function(){
+				var canvas = document.getElementById("canvas");
+				var ctx = canvas.getContext("2d");
+				
+				canvas.width = window.innerWidth;
+				canvas.height = window.innerHeight;
+				
+				var num = 20;//桃心数量
+				var peachArr = [];//存放桃心数组
+				var textCon = "just for you~";//落款内容
+				var textSize = 3;//落款字体大小
+				var opacity = Math.random();
+				
+				//桃心
+				function Peach(){
+					this.x = canvas.width/2;
+					this.y = canvas.width/2;
+					this.con = "♥";//内容
+					this.angle = 0; //角度
+					this.size = 30;//字体大小
+					this.bg = "#FD6790";
+					this.borderC = "#fff";
+					this.t = 180;//弧度
+					this.r = 15;//半径
+				}
+				
+				function createPeach(){
+					while(num--){
+						var peach = new Peach();
+						peachArr.push(peach);
+						peach.x = Math.random()*canvas.width;
+						peach.y = Math.random()*canvas.height;
+						peach.draw();
+						animatePeach(peach);
+					}
+				}
+				
+				//画桃心
+				Peach.prototype.draw = function(){
+					ctx.beginPath();
+					ctx.fillText(this.con,this.x,this.y);
+					ctx.strokeText(this.con,this.x,this.y);
+					ctx.font = this.size + "px Calibri";
+					ctx.fillStyle = this.bg;
+					ctx.lineWidth = 1;
+					ctx.strokeStyle = this.borderC;
+					ctx.closePath();
+					ctx.stroke();
+					ctx.fill();
+				}
+				
+				function animatePeach(peach){
+					
+					/*ctx.fillStyle = "rgba(0,0,0,"+opacity+")";
+					ctx.fillRect(0,0,canvas.width,canvas.height);*/
+		
+					peach.t++;
+					peach.x = canvas.width/2 + peach.r * (16 * Math.pow(Math.sin(peach.t), 3));
+					peach.y = canvas.height/2 - peach.r * (13 * Math.cos(peach.t) - 5 * Math.cos(2 * peach.t) - 2 * Math.cos(3 * peach.t) - Math.cos(4 * peach.t));
+					
+					if(peach.size<50){
+						peach.size+=3;
+					}else{
+						peach.size = 30;
+					}
+					peach.draw();
+					
+					requestAnimationFrame(function(){
+						animatePeach(peach);
+					});
+				}
+				
+				var peach = new Peach();
+				createPeach();
+				drawText();
+				
+				
+				function drawText(){
+					ctx.beginPath();
+					ctx.fillText("----- "+textCon,canvas.width*0.7,canvas.height*0.9);
+					ctx.font = textSize + "px Arial";
+					ctx.fillStyle = this.bg;
+					ctx.lineWidth = 1;
+					ctx.closePath();
+					ctx.fill();
+				}
+			
+				
+			});
+		</script>
+		<div id="box">
+		</div>
+		<div id="box1">
+		</div>
+		<div id="box2">
+		</div>
+		<!--
+			盒子标签  有宽度 有高度 放置内容 长方形区域
+			命名
+			id=""     身份证  唯一性 ID号    
+			class=""  名字  重复用  多个
+			命名规范
+			1.不能用中文
+			2.以字母开头，数字，下划线。横线
+			3.见名知义
+		-->
+		<script>
+		//获取到容器
+		var objbox = document.getElementById("box");
+		var objbox1 = document.getElementById("box1");
+		var objbox2 = document.getElementById("box2");
+		setInterval("movePosition()",1000);
+			setInterval("movePosition1()",1250);
+				setInterval("movePosition2()",1500);
+
+		//创建
+		for(var i =0; i<36; i++){			
+			//添加对象
+			objbox.appendChild(getNode());
+			objbox1.appendChild(getNode());
+			objbox2.appendChild(getNode());
+		}
+		function getNode(){
+			var obj = document.createElement("div");
+			obj.style.width = "100px";
+			obj.style.height = "160px";
+			obj.style.border = "1px solid "+color()+"";
+			obj.style.borderWidth = "3px 3px 0px 0px";
+			obj.style.position = "absolute";
+			obj.style.left = "0";
+			obj.style.top = "0";
+			obj.style.borderRadius = "50% 40% 50% 0";
+			obj.style.transform = "rotateY("+10*i+"deg) rotateZ(45deg) translateX(30px)";
+			return obj;
+		}
+		//随机颜色
+		function color(){
+			var r = parseInt(Math.random()*255)//0~255
+			var g = parseInt(Math.random()*255)//0~255
+			var b = parseInt(Math.random()*255)//0~255
+			return "rgba("+r+","+g+","+b+",1)"
+		}
+		function movePosition(){
+               	var objbox = document.getElementById("box");
+            
+             objbox.style.left = Math.random(1200)*1200+"px";
+			 objbox.style.top = Math.random(600)*600+"px";
+			
+
+		}
+			function movePosition1(){
+               
+               	var objbox1 = document.getElementById("box1");
+			  objbox1.style.left = Math.random(1200)*1200+"px";
+			 objbox1.style.top = Math.random(600)*600+"px";
+
+		}
+			function movePosition2(){
+               	var objbox2 = document.getElementById("box2");
+			  objbox2.style.left = Math.random(1200)*1200+"px";
+			 objbox2.style.top = Math.random(600)*600+"px";
+
+		}
+		</script>
+	</body>
+</html>
